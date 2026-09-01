@@ -1,5 +1,7 @@
 # MarkFlow – Notion-like Markdown Editor
 
+**Install from the VS Code Marketplace:** [MarkFlow – Notion-like Markdown Editor](https://marketplace.visualstudio.com/items?itemName=srivathsanvenkateswaran.markflow-markdown-editor) — or search for "MarkFlow" in the Extensions view inside VS Code.
+
 MarkFlow makes Markdown files in VS Code behave like documents instead of source code. It exists because the built-in Markdown preview gets in the way of actually writing:
 
 - **The preview is a singleton.** Open a preview for a second file and it replaces the first. You cannot read two rendered documents side by side.
