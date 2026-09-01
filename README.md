@@ -85,7 +85,7 @@ With that in place, `.md` files open as text and you opt into MarkFlow per file 
 From a packaged `.vsix`:
 
 ```
-code --install-extension markflow-0.1.0.vsix
+code --install-extension markflow-markdown-editor-0.2.0.vsix
 ```
 
 Then reload VS Code and open any `.md` file.
