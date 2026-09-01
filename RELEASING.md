@@ -1,39 +1,43 @@
 # Releasing MarkFlow
 
-## Build and package
+## Automated releases (preferred)
+
+Pushing a `v*` tag runs `.github/workflows/release.yml`, which builds,
+packages, publishes to the VS Code Marketplace, and attaches the `.vsix` to a
+GitHub Release:
 
 ```
-npm run build
-npx @vscode/vsce package
+# bump "version" in package.json and add a CHANGELOG entry, commit, then:
+git tag -a v0.3.0 -m "MarkFlow 0.3.0"
+git push origin main v0.3.0
 ```
 
-This produces `markflow-0.1.0.vsix` in the repo root. Smoke-test it locally:
+One-time setup for the workflow — a Marketplace PAT stored as a repo secret:
+
+1. You need an Azure DevOps organization (dev.azure.com). Creating one may
+   demand a linked Azure subscription; a free Azure account satisfies it.
+2. In Azure DevOps: User settings → Personal Access Tokens → New Token, with
+   Organization **All accessible organizations** and scope
+   **Marketplace → Manage**. Max lifetime is one year — recreate it when it
+   expires (publishes start failing with 401).
+3. In the GitHub repo: Settings → Secrets and variables → Actions → New
+   repository secret, name `VSCE_PAT`, value = the token.
+
+## Manual fallback (no PAT needed)
 
 ```
-code --install-extension markflow-0.1.0.vsix
+npx @vscode/vsce package --no-dependencies
+code --install-extension markflow-markdown-editor-<version>.vsix   # smoke test
 ```
 
-Reload VS Code and open a `.md` file to confirm it renders in MarkFlow.
+Then upload the `.vsix` at https://marketplace.visualstudio.com/manage →
+publisher `srivathsanvenkateswaran` → ⋮ next to the extension → Update.
 
-## Publishing to the Marketplace
+## Notes
 
-One-time setup:
-
-1. Create a publisher at https://marketplace.visualstudio.com/manage.
-2. Create a Personal Access Token in Azure DevOps (https://dev.azure.com):
-   - Organization: **All accessible organizations**
-   - Scope: **Marketplace → Manage**
-3. Make sure the `publisher` field in `package.json` matches the publisher id you created — `vsce publish` fails otherwise.
-4. Log in with the PAT:
-
-   ```
-   npx @vscode/vsce login <publisher>
-   ```
-
-Then publish:
-
-```
-npx @vscode/vsce publish
-```
-
-This builds, packages, and uploads the current version. Bump `version` in `package.json` before each subsequent release (or use `vsce publish patch|minor|major`), and add a matching entry to `CHANGELOG.md`.
+- The `publisher` field in `package.json` must stay `srivathsanvenkateswaran`
+  (the Marketplace publisher id); uploads with a mismatched id are rejected.
+- The extension `name` (`markflow-markdown-editor`) is globally unique on the
+  Marketplace and part of the install id — do not change it.
+- With a PAT logged in locally (`npx @vscode/vsce login srivathsanvenkateswaran`),
+  `npx @vscode/vsce publish` from the repo root also works without CI.
