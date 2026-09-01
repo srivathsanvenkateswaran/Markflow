@@ -11,9 +11,21 @@ declare function acquireVsCodeApi(): {
   setState(state: unknown): void;
 };
 
+type PreviewStyle = 'vscode' | 'notion';
+
 type HostMessage =
-  | { type: 'init'; text: string }
-  | { type: 'update'; text: string };
+  | { type: 'init'; text: string; style: PreviewStyle; maxWidth: number }
+  | { type: 'update'; text: string }
+  | { type: 'setStyle'; style: PreviewStyle; maxWidth: number };
+
+function applyStyle(style: PreviewStyle, maxWidth: number): void {
+  document.body.classList.toggle('markflow-vscode', style === 'vscode');
+  document.body.classList.toggle('markflow-notion', style === 'notion');
+  document.body.style.setProperty(
+    '--markflow-max-width',
+    maxWidth > 0 ? `${maxWidth}px` : 'none'
+  );
+}
 
 const vscode = acquireVsCodeApi();
 const DEBOUNCE_MS = 250;
@@ -135,6 +147,7 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   }
   switch (message.type) {
     case 'init': {
+      applyStyle(message.style, message.maxWidth);
       lastReceivedText = message.text;
       if (!crepe && !creating) {
         void createEditor(message.text);
@@ -146,6 +159,10 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
     case 'update': {
       lastReceivedText = message.text;
       applyIncoming(message.text);
+      break;
+    }
+    case 'setStyle': {
+      applyStyle(message.style, message.maxWidth);
       break;
     }
   }

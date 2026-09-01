@@ -15,15 +15,30 @@ function activeMarkdownUri(): vscode.Uri | undefined {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+  const provider = new MarkdownEditorProvider(context);
+
   context.subscriptions.push(
-    vscode.window.registerCustomEditorProvider(
-      MarkdownEditorProvider.viewType,
-      new MarkdownEditorProvider(context),
-      {
-        webviewOptions: { retainContextWhenHidden: true },
-        supportsMultipleEditorsPerDocument: true,
+    vscode.window.registerCustomEditorProvider(MarkdownEditorProvider.viewType, provider, {
+      webviewOptions: { retainContextWhenHidden: true },
+      supportsMultipleEditorsPerDocument: true,
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('markflow.toggleStyle', async (uri?: vscode.Uri) => {
+      const target = uri ?? activeMarkdownUri();
+      if (target) {
+        await provider.toggleStyle(target);
       }
-    )
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('markflow')) {
+        provider.onConfigurationChanged();
+      }
+    })
   );
 
   context.subscriptions.push(

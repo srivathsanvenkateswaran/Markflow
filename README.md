@@ -18,6 +18,8 @@ MarkFlow is not affiliated with Notion Labs or Obsidian; "Notion-like" describes
 - Block drag handles for reordering content
 - Inline formatting toolbar on text selection
 - Tables, task lists, and code blocks with syntax highlighting
+- Two rendering styles per file: VS Code-preview typography (the default) or a Notion-like document look, switchable with one click
+- Full-width layout by default; content width is configurable
 - Follows your VS Code color theme, light or dark
 - Fully offline — all assets are bundled with the extension, nothing is fetched from a CDN
 
@@ -35,6 +37,20 @@ What lands on disk is plain CommonMark + GFM. There is no proprietary format and
 ## Slash commands
 
 You rarely need to remember Markdown syntax. Type `/` anywhere in the document and pick from the menu — headings, bulleted and numbered lists, task lists, tables, quotes, dividers, code blocks, images. Typing after the `/` filters the list.
+
+## Preview styles
+
+Each file renders in one of two styles, both fully editable:
+
+- **vscode** (default) — typography matching VS Code's built-in Markdown preview: compact text, bordered `h1`/`h2`, full-width layout.
+- **notion** — larger headings and a document feel.
+
+Switch the current file with **MarkFlow: Toggle Preview Style** (Command Palette or the color-mode icon in the editor title bar). The choice is remembered per file in the workspace. Two settings control the defaults:
+
+```json
+"markflow.defaultStyle": "vscode",   // or "notion"
+"markflow.maxContentWidth": 0        // pixels; 0 = full editor width
+```
 
 ## Switching to source view
 

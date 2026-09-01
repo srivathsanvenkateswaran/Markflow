@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-01
+
+### Added
+
+- Per-file preview style toggle (`MarkFlow: Toggle Preview Style`, editor-title icon): switch any file between VS Code-preview typography and the Notion-like document look. The choice persists per file in the workspace.
+- `markflow.defaultStyle` setting (`vscode` | `notion`, default `vscode`).
+- `markflow.maxContentWidth` setting (pixels, default `0` = full editor width).
+
+### Changed
+
+- The default style is now VS Code-preview typography instead of the Notion look.
+- Content spans the full editor width by default; the previous centered 820px column (plus a 120px gutter Crepe's theme added on each side) is gone. Set `markflow.maxContentWidth` to restore a column.
+
 ## [0.1.0] - 2026-09-01
 
 ### Added
@@ -17,3 +30,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Commands `MarkFlow: Open Markdown Source` and `MarkFlow: Open with MarkFlow`, each with an editor-title icon.
 - Theme integration: editor colors follow the active VS Code light or dark theme.
 - Relative image paths resolve against the document's directory; all assets bundled locally, no network access required.
+- YAML frontmatter preserved byte-for-byte through WYSIWYG edits.

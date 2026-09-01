@@ -11,12 +11,82 @@ body {
   min-height: 100%;
 }
 
-/* Notion-like centered column. */
+body {
+  /* Overridden from the host via markflow.maxContentWidth; none = full width. */
+  --markflow-max-width: none;
+}
+
 #app .milkdown {
-  max-width: 820px;
+  max-width: var(--markflow-max-width);
   margin: 0 auto;
-  padding: 48px 56px 40vh;
   background: transparent;
+}
+
+/* Notion-like document feel: airier padding, large type (Crepe defaults). */
+body.markflow-notion #app .milkdown {
+  padding: 32px 44px 30vh;
+}
+
+/* VS Code-preview feel: tight padding, preview typography. */
+body.markflow-vscode #app .milkdown {
+  padding: 8px 26px 30vh;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui,
+    'Ubuntu', 'Droid Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror h1,
+body.markflow-vscode #app .milkdown .ProseMirror h2,
+body.markflow-vscode #app .milkdown .ProseMirror h3,
+body.markflow-vscode #app .milkdown .ProseMirror h4,
+body.markflow-vscode #app .milkdown .ProseMirror h5,
+body.markflow-vscode #app .milkdown .ProseMirror h6 {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 24px 0 8px;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vscode-widget-border, var(--vscode-editorWidget-border, #80808060));
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vscode-widget-border, var(--vscode-editorWidget-border, #80808060));
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror h3 {
+  font-size: 1.25em;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror h4 {
+  font-size: 1em;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror p {
+  margin: 0 0 16px;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror code {
+  font-size: 85%;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: var(--vscode-textCodeBlock-background, #80808020);
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror blockquote {
+  margin: 0 0 16px;
+  padding: 4px 16px;
+  border-left: 4px solid var(--vscode-textBlockQuote-border, #80808060);
+  background: var(--vscode-textBlockQuote-background, transparent);
 }
 
 /* Map Crepe's Frame theme tokens onto VS Code theme variables so the editor
@@ -51,6 +121,10 @@ body {
 
 #app .milkdown .ProseMirror {
   outline: none;
+  /* Crepe's frame theme adds a 120px gutter on each side; the container's own
+     padding provides the gutter (and room for the block drag handle). */
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #app .milkdown .ProseMirror-focused {

@@ -2,8 +2,12 @@
   "name": "markflow",
   "displayName": "MarkFlow – Notion-like Markdown Editor",
   "description": "Edit Markdown files in a Notion-like WYSIWYG editor. Every .md file opens rendered, editable, and saves back as plain Markdown.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "srivathsanv",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/srivathsanvenkateswaran/Markflow"
+  },
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
@@ -46,6 +50,11 @@
         "command": "markflow.openWysiwyg",
         "title": "MarkFlow: Open with MarkFlow",
         "icon": "$(open-preview)"
+      },
+      {
+        "command": "markflow.toggleStyle",
+        "title": "MarkFlow: Toggle Preview Style (VS Code / Notion)",
+        "icon": "$(color-mode)"
       }
     ],
     "menus": {
@@ -59,8 +68,33 @@
           "command": "markflow.openWysiwyg",
           "when": "resourceLangId == markdown && activeCustomEditorId != markflow.editor",
           "group": "navigation"
+        },
+        {
+          "command": "markflow.toggleStyle",
+          "when": "activeCustomEditorId == markflow.editor",
+          "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "title": "MarkFlow",
+      "properties": {
+        "markflow.defaultStyle": {
+          "type": "string",
+          "enum": ["vscode", "notion"],
+          "enumDescriptions": [
+            "Typography matching VS Code's built-in Markdown preview, full-width layout",
+            "Notion-like typography with larger headings and a document feel"
+          ],
+          "default": "vscode",
+          "description": "Default rendering style for MarkFlow editors. Each file can be switched individually with the MarkFlow: Toggle Preview Style command."
+        },
+        "markflow.maxContentWidth": {
+          "type": "number",
+          "default": 0,
+          "description": "Maximum content width in pixels. 0 uses the full editor width."
+        }
+      }
     }
   },
   "scripts": {

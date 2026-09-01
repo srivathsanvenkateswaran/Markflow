@@ -1,9 +1,12 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+export type PreviewStyle = 'vscode' | 'notion';
+
 type HostMessage =
-  | { type: 'init'; text: string }
-  | { type: 'update'; text: string };
+  | { type: 'init'; text: string; style: PreviewStyle; maxWidth: number }
+  | { type: 'update'; text: string }
+  | { type: 'setStyle'; style: PreviewStyle; maxWidth: number };
 
 type WebviewMessage =
   | { type: 'ready' }
@@ -12,7 +15,50 @@ type WebviewMessage =
 export class MarkdownEditorProvider implements vscode.CustomTextEditorProvider {
   public static readonly viewType = 'markflow.editor';
 
+  private readonly panels = new Map<string, Set<vscode.WebviewPanel>>();
+
   constructor(private readonly context: vscode.ExtensionContext) {}
+
+  private styleKey(uri: vscode.Uri): string {
+    return `markflow.style:${uri.toString()}`;
+  }
+
+  public getStyle(uri: vscode.Uri): PreviewStyle {
+    const override = this.context.workspaceState.get<PreviewStyle>(this.styleKey(uri));
+    if (override === 'vscode' || override === 'notion') {
+      return override;
+    }
+    return vscode.workspace
+      .getConfiguration('markflow')
+      .get<PreviewStyle>('defaultStyle', 'vscode');
+  }
+
+  private getMaxWidth(): number {
+    return vscode.workspace.getConfiguration('markflow').get<number>('maxContentWidth', 0);
+  }
+
+  public async toggleStyle(uri: vscode.Uri): Promise<void> {
+    const next: PreviewStyle = this.getStyle(uri) === 'vscode' ? 'notion' : 'vscode';
+    await this.context.workspaceState.update(this.styleKey(uri), next);
+    this.broadcastStyle(uri);
+  }
+
+  private broadcastStyle(uri: vscode.Uri): void {
+    const message: HostMessage = {
+      type: 'setStyle',
+      style: this.getStyle(uri),
+      maxWidth: this.getMaxWidth(),
+    };
+    for (const panel of this.panels.get(uri.toString()) ?? []) {
+      void panel.webview.postMessage(message);
+    }
+  }
+
+  public onConfigurationChanged(): void {
+    for (const key of this.panels.keys()) {
+      this.broadcastStyle(vscode.Uri.parse(key));
+    }
+  }
 
   public async resolveCustomTextEditor(
     document: vscode.TextDocument,
@@ -32,6 +78,14 @@ export class MarkdownEditorProvider implements vscode.CustomTextEditorProvider {
     };
 
     webview.html = this.getHtml(webview, documentDir);
+
+    const panelKey = document.uri.toString();
+    let panelSet = this.panels.get(panelKey);
+    if (!panelSet) {
+      panelSet = new Set();
+      this.panels.set(panelKey, panelSet);
+    }
+    panelSet.add(webviewPanel);
 
     // Last text this webview asked us to write into the document. When the
     // resulting onDidChangeTextDocument fires and the document matches it,
@@ -59,7 +113,12 @@ export class MarkdownEditorProvider implements vscode.CustomTextEditorProvider {
     const messageSubscription = webview.onDidReceiveMessage(async (message: WebviewMessage) => {
       switch (message.type) {
         case 'ready': {
-          void webview.postMessage({ type: 'init', text: document.getText() } satisfies HostMessage);
+          void webview.postMessage({
+            type: 'init',
+            text: document.getText(),
+            style: this.getStyle(document.uri),
+            maxWidth: this.getMaxWidth(),
+          } satisfies HostMessage);
           break;
         }
         case 'edit': {
@@ -90,6 +149,10 @@ export class MarkdownEditorProvider implements vscode.CustomTextEditorProvider {
     webviewPanel.onDidDispose(() => {
       changeSubscription.dispose();
       messageSubscription.dispose();
+      panelSet.delete(webviewPanel);
+      if (panelSet.size === 0) {
+        this.panels.delete(panelKey);
+      }
     });
   }
 
