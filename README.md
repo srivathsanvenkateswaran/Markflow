@@ -1,6 +1,8 @@
 # MarkFlow – Notion-like Markdown Editor
 
-**Install from the VS Code Marketplace:** [MarkFlow – Notion-like Markdown Editor](https://marketplace.visualstudio.com/items?itemName=srivathsanvenkateswaran.markflow-markdown-editor) — or search for "MarkFlow" in the Extensions view inside VS Code.
+[![Marketplace](https://img.shields.io/visual-studio-marketplace/v/srivathsanvenkateswaran.markflow-markdown-editor?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=srivathsanvenkateswaran.markflow-markdown-editor)
+
+**Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=srivathsanvenkateswaran.markflow-markdown-editor)** — or search for "MarkFlow" in the Extensions view inside VS Code.
 
 MarkFlow makes Markdown files in VS Code behave like documents instead of source code. It exists because the built-in Markdown preview gets in the way of actually writing:
 
@@ -16,11 +18,12 @@ MarkFlow is not affiliated with Notion Labs or Obsidian; "Notion-like" describes
 
 - Rendered WYSIWYG view as the default editor for Markdown files, built on the Milkdown Crepe engine
 - Unlimited files open in rendered view at the same time, each in its own tab
+- Two rendering styles per file, both fully editable: VS Code-preview typography (the default) or a Notion-like document look, switched with one click
 - Slash-command menu: type `/` to insert headings, lists, tables, code blocks, images, and more
 - Block drag handles for reordering content
 - Inline formatting toolbar on text selection
 - Tables, task lists, and code blocks with syntax highlighting
-- Two rendering styles per file: VS Code-preview typography (the default) or a Notion-like document look, switchable with one click
+- YAML frontmatter preserved byte-for-byte through edits
 - Full-width layout by default; content width is configurable
 - Follows your VS Code color theme, light or dark
 - Fully offline — all assets are bundled with the extension, nothing is fetched from a CDN
@@ -47,22 +50,24 @@ Each file renders in one of two styles, both fully editable:
 - **vscode** (default) — typography matching VS Code's built-in Markdown preview: compact text, bordered `h1`/`h2`, full-width layout.
 - **notion** — larger headings and a document feel.
 
-Switch the current file with **MarkFlow: Toggle Preview Style** (Command Palette or the color-mode icon in the editor title bar). The choice is remembered per file in the workspace. Two settings control the defaults:
+Switch the current file with **MarkFlow: Toggle Preview Style** (Command Palette or the color-mode icon in the editor title bar). The choice is remembered per file in the workspace.
 
-```json
-"markflow.defaultStyle": "vscode",   // or "notion"
-"markflow.maxContentWidth": 0        // pixels; 0 = full editor width
-```
+## Commands
 
-## Switching to source view
+| Command | What it does |
+| --- | --- |
+| `MarkFlow: Open with MarkFlow` | Reopen the current Markdown file in the rendered editor |
+| `MarkFlow: Open Markdown Source` | Reopen the current file in the plain text editor |
+| `MarkFlow: Toggle Preview Style (VS Code / Notion)` | Switch the current file between the two rendering styles |
 
-When you want the raw Markdown:
+The first two also appear as icons in the editor title bar, so switching direction is one click either way. A one-off alternative: right-click the file in the Explorer and choose **Open With… → Text Editor**.
 
-- Run **MarkFlow: Open Markdown Source** from the Command Palette, or click the source icon in the editor title bar
-- To come back, run **MarkFlow: Open with MarkFlow** or click its title-bar icon
-- One-off alternative: right-click the file in the Explorer and choose **Open With… → Text Editor**
+## Settings
 
-## Configuration
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `markflow.defaultStyle` | `"vscode"` | Rendering style for files without a per-file override (`"vscode"` or `"notion"`) |
+| `markflow.maxContentWidth` | `0` | Maximum content width in pixels; `0` uses the full editor width |
 
 If you would rather have Markdown open in the plain text editor by default and use MarkFlow only on demand, add this to your settings:
 
@@ -77,17 +82,30 @@ With that in place, `.md` files open as text and you opt into MarkFlow per file 
 ## Known limitations
 
 - Markdown that leans heavily on raw HTML may not round-trip exactly through the WYSIWYG view. Such files still load (the parser is lenient), but they are better edited in source view.
-- YAML frontmatter is passed through untouched but not rendered as a form or table — v1 treats it as opaque text.
+- YAML frontmatter is preserved exactly but shown and edited only in source view — it is not rendered as a form or table.
 - Mermaid diagrams and math rendering are not in this release.
 - The serializer normalizes some Markdown style on the first edit — most visibly, `-` list bullets become `*`. The content is identical; only the syntax flavor changes, so expect a one-time diff on files written with different conventions.
-- YAML frontmatter is preserved byte-for-byte but shown/edited only in source view.
 
-## Installing locally
+## Installing without the Marketplace
 
-From a packaged `.vsix`:
+Grab the `.vsix` from the [GitHub releases](https://github.com/srivathsanvenkateswaran/Markflow/releases) (or build it yourself) and install it directly:
 
 ```
-code --install-extension markflow-markdown-editor-0.2.0.vsix
+code --install-extension markflow-markdown-editor-<version>.vsix
 ```
 
 Then reload VS Code and open any `.md` file.
+
+## Building from source
+
+```
+npm install
+npm run build                                 # type-check + bundle
+npx @vscode/vsce package --no-dependencies    # produce the .vsix
+```
+
+Press `F5` in VS Code to launch an Extension Development Host with the extension loaded. Release steps are in [RELEASING.md](RELEASING.md).
+
+## License
+
+[MIT](LICENSE)
