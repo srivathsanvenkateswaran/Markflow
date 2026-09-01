@@ -1,0 +1,82 @@
+{
+  "name": "markflow",
+  "displayName": "MarkFlow – Notion-like Markdown Editor",
+  "description": "Edit Markdown files in a Notion-like WYSIWYG editor. Every .md file opens rendered, editable, and saves back as plain Markdown.",
+  "version": "0.1.0",
+  "publisher": "srivathsanv",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "markdown",
+    "wysiwyg",
+    "notion",
+    "editor",
+    "preview"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "markflow.editor",
+        "displayName": "MarkFlow Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.md"
+          },
+          {
+            "filenamePattern": "*.markdown"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "commands": [
+      {
+        "command": "markflow.openSource",
+        "title": "MarkFlow: Open Markdown Source",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "markflow.openWysiwyg",
+        "title": "MarkFlow: Open with MarkFlow",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "markflow.openSource",
+          "when": "activeCustomEditorId == markflow.editor",
+          "group": "navigation"
+        },
+        {
+          "command": "markflow.openWysiwyg",
+          "when": "resourceLangId == markdown && activeCustomEditorId != markflow.editor",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "vscode:prepublish": "npm run build -- --production",
+    "package": "npx @vscode/vsce package"
+  },
+  "dependencies": {
+    "@milkdown/crepe": "^7",
+    "@milkdown/kit": "^7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/vscode": "~1.85",
+    "esbuild": "^0.24",
+    "typescript": "^5"
+  }
+}

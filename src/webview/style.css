@@ -1,0 +1,72 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+}
+
+#app {
+  min-height: 100%;
+}
+
+/* Notion-like centered column. */
+#app .milkdown {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 48px 56px 40vh;
+  background: transparent;
+}
+
+/* Map Crepe's Frame theme tokens onto VS Code theme variables so the editor
+   follows light/dark themes. */
+#app .milkdown {
+  --crepe-color-background: var(--vscode-editor-background);
+  --crepe-color-on-background: var(--vscode-editor-foreground);
+  --crepe-color-surface: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  --crepe-color-surface-low: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  --crepe-color-on-surface: var(--vscode-editor-foreground);
+  --crepe-color-on-surface-variant: var(--vscode-descriptionForeground, var(--vscode-editor-foreground));
+  --crepe-color-outline: var(--vscode-widget-border, var(--vscode-editorWidget-border, #80808060));
+  --crepe-color-primary: var(--vscode-textLink-foreground);
+  --crepe-color-secondary: var(--vscode-toolbar-hoverBackground, #80808030);
+  --crepe-color-on-secondary: var(--vscode-editor-foreground);
+  --crepe-color-inverse: var(--vscode-editor-foreground);
+  --crepe-color-on-inverse: var(--vscode-editor-background);
+  --crepe-color-inline-code: var(--vscode-textPreformat-foreground, var(--vscode-editor-foreground));
+  --crepe-color-error: var(--vscode-errorForeground, #ba1a1a);
+  --crepe-color-hover: var(--vscode-list-hoverBackground, #80808020);
+  --crepe-color-selected: var(--vscode-editor-selectionBackground, #80808040);
+  --crepe-color-inline-area: var(--vscode-textCodeBlock-background, #80808020);
+
+  --crepe-font-title: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --crepe-font-default: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --crepe-font-code: var(--vscode-editor-font-family, Menlo, Monaco, 'Courier New', monospace);
+}
+
+#app .milkdown a {
+  color: var(--vscode-textLink-foreground);
+}
+
+#app .milkdown .ProseMirror {
+  outline: none;
+}
+
+#app .milkdown .ProseMirror-focused {
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+.markflow-error {
+  max-width: 820px;
+  margin: 48px auto;
+  padding: 16px 20px;
+  border: 1px solid var(--vscode-errorForeground, #ba1a1a);
+  border-radius: 6px;
+  color: var(--vscode-errorForeground, #ba1a1a);
+  font-family: var(--vscode-font-family, sans-serif);
+}
