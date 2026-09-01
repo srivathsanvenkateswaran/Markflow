@@ -2,8 +2,9 @@
   "name": "markflow-markdown-editor",
   "displayName": "MarkFlow – Notion-like Markdown Editor",
   "description": "Edit Markdown files in a Notion-like WYSIWYG editor. Every .md file opens rendered, editable, and saves back as plain Markdown.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "srivathsanvenkateswaran",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/srivathsanvenkateswaran/Markflow"
