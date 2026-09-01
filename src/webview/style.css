@@ -73,6 +73,35 @@ body.markflow-vscode #app .milkdown .ProseMirror h4 {
 
 body.markflow-vscode #app .milkdown .ProseMirror p {
   margin: 0 0 16px;
+  padding: 0;
+}
+
+/* Compact lists: the theme wraps each item's text in a paragraph; without
+   this every bullet inherits the paragraph margin and lists balloon. */
+body.markflow-vscode #app .milkdown .ProseMirror li p {
+  margin: 0;
+  padding: 1px 0;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror ul,
+body.markflow-vscode #app .milkdown .ProseMirror ol {
+  margin: 0 0 16px;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror li ul,
+body.markflow-vscode #app .milkdown .ProseMirror li ol {
+  margin: 0;
+}
+
+/* The theme's bullet/checkbox holder is 32px tall and sets the row height. */
+body.markflow-vscode #app .milkdown .ProseMirror li .label-wrapper {
+  height: 24px;
+}
+
+body.markflow-vscode #app .milkdown .ProseMirror blockquote p:last-child,
+body.markflow-vscode #app .milkdown .ProseMirror th p,
+body.markflow-vscode #app .milkdown .ProseMirror td p {
+  margin: 0;
 }
 
 body.markflow-vscode #app .milkdown .ProseMirror code {

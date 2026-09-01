@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-09-01
+
+### Fixed
+
+- Compact list spacing in the VS Code style: list items no longer inherit the 16px paragraph margin plus the theme's 4px padding and 32px bullet-row height, which made lists roughly twice as tall as VS Code's built-in preview. Table cells and the last paragraph of blockquotes are tightened the same way.
+
 ## [0.2.1] - 2026-09-01
 
 ### Fixed
